@@ -44,11 +44,28 @@ app.get("/listings", async (req, res) => {
   res.render("listings/index.ejs", { allListings });
 });
 
+// This new route created above the show route because node will consider new as id.
+//Create: New and create Route-->
+// GET /listing/new --> FORM--> Submit--> POST-->/listing
+app.get("/listings/new", (req, res) => {
+  res.render("listings/new.ejs");
+});
+
 // Show Route-->
 app.get("/listings/:id", async (req, res) => {
   let { id } = req.params;
   const listing = await Listing.findById(id);
-  res.render("listings/show.ejs",{listing});
+  res.render("listings/show.ejs", { listing });
+});
+
+//Create route
+app.post("/listings", async (req, res) => {
+  // let { title, description, price, image, location, country } = req.body;
+  // let listing = req.body.listing; //Alternate and show way instead of above line.
+  const newListing = new Listing(req.body.listing);
+  await newListing.save();
+  // console.log(listing);
+  res.redirect("listings");
 });
 
 app.listen(8080, () => {

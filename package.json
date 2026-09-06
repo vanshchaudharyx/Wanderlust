@@ -17,5 +17,10 @@
   "bugs": {
     "url": "https://github.com/vanshchaudharyx/Wanderlust/issues"
   },
-  "homepage": "https://github.com/vanshchaudharyx/Wanderlust#readme"
+  "homepage": "https://github.com/vanshchaudharyx/Wanderlust#readme",
+  "dependencies": {
+    "ejs": "^6.0.1",
+    "express": "^5.2.1",
+    "mongoose": "^9.9.5"
+  }
 }

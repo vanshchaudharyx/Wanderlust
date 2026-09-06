@@ -19,6 +19,7 @@ async function main() {
 }
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+app.use(express.urlencoded({ extended: true }));
 // app.get("/testListing", async (req, res) => {
 //   let sampleListing = new Listing({
 //     title: "My New Villa",
@@ -41,6 +42,13 @@ app.get("/listings", async (req, res) => {
   let allListings = await Listing.find({});
   // console.log(allListings[0].location);
   res.render("listings/index.ejs", { allListings });
+});
+
+// Show Route-->
+app.get("/listings/:id", async (req, res) => {
+  let { id } = req.params;
+  const listing = await Listing.findById(id);
+  res.render("listings/show.ejs",{listing});
 });
 
 app.listen(8080, () => {

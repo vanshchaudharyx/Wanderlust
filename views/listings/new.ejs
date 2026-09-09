@@ -1,35 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wanderlust</title>
-</head>
-<body>
-    <h3>Create a New Listing</h3>
+<% layout("layouts/boilerplate")%>
+    <div class="row">
+        <div class="col-8 offset-2">
+            <h3>Create a New Listing</h3>
+            <br><br>
 
-    <form method="POST" action="/listings">
+            <form method="POST" action="/listings">
+                <div class="mb-2">
+                    <lable for="title" class="form-label">Title</lable>
+                    <input name="listing[title]" placeholder="Add a catchy title" type="text" class="form-control" />
+                </div>
 
-        <input name="listing[title]" placeholder="Enter title" type="text">
-        <br><br>
+                <br><br>
+                <div class="mb-2">
+                    <lable for="description" class="form-label">Description</lable>
+                    <textarea name="lisiting[description]" placeholder="Enter description"
+                        class="form-control"></textarea>
+                </div>
+                <br><br>
+                <div class="mb-2">
+                    <lable for="image" class="form-label">Image Link</lable>
+                    <input name="listing[image]" placeholder="Enter image URL/Link" type="text" class="form-control" />
+                </div>
+                <br><br>
+                <div class="row">
+                    <div class="mb-2 col-4">
+                        <lable for="price" class="form-label">Price</lable>
+                        <input name="listing[price]" placeholder="1200" type="number" class="form-control" />
+                    </div>
+                    <br><br>
+                    <div class="mb-2 col-md-8">
+                        <lable for="country" class="form-label">Image Link</lable>
+                        <input name="listing[country]" placeholder="India" type="text" class="form-control" />
+                    </div>
+                </div>
+                <br><br>
+                <div class="mb-2">
+                    <lable for="location" class="form-label">Location</lable>
+                    <input name="listing[location]" placeholder="Jaipur,Rajsthan" type="text" class="form-control" />
+                </div>
+                <br><br>
 
-        <textarea name="lisiting[description]" placeholder="Enter description"></textarea>
-        <br><br>
+                <button class="btn btn-dark add-btn">Add</button>
+                <br><br><br>
 
-        <input name="listing[image]" placeholder="Enter image URL" type="text">
-        <br><br>
-
-        <input name="listing[price]" placeholder="Enter price" type="number">
-        <br><br>
-
-        <input name="listing[location]" placeholder="Enter location" type="text">
-        <br><br>
-
-        <input name="listing[country]" placeholder="Enter country" type="text">
-        <br><br>
-
-        <button>Create Listing</button>
-
-    </form>
-</body>
-</html>
+            </form>
+        </div>
+    </div>

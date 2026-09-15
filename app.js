@@ -5,6 +5,7 @@ const Listing = require("./models/listing.js");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
+const wrapAsync = require("./utils/wrapAsync.js");
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 
@@ -64,18 +65,18 @@ app.get("/listings/:id", async (req, res) => {
 });
 
 //Create route
-app.post("/listings", async (req, res) => {
-  // let { title, description, price, image, location, country } = req.body;
-  // let listing = req.body.listing; //Alternate and show way instead of above line.
-  try {
+app.post(
+  "/listings",
+  wrapAsync(async (req, res, next) => {
+    // let { title, description, price, image, location, country } = req.body;
+    // let listing = req.body.listing; //Alternate and show way instead of above line.
+
     const newListing = new Listing(req.body.listing);
     await newListing.save();
     // console.log(listing);
     res.redirect("listings");
-  } catch (err) {
-    next(err); //We will call our error handler for error.
-  }
-});
+  }),
+);
 // Update Route: Edit and Update route
 // Get-->/listings/:id/edit --->render edit form-->submit --->PUT-->/listings/:id
 

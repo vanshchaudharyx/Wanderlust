@@ -77,9 +77,9 @@ app.post(
   wrapAsync(async (req, res, next) => {
     // let { title, description, price, image, location, country } = req.body;
     // let listing = req.body.listing; //Alternate and show way instead of above line.
-if (!req.body.listing){
-  throw new ExpressError(400,"Send valid data for listing")
-}
+    if (!req.body.listing) {
+      throw new ExpressError(400, "Send valid data for listing");
+    }
     const newListing = new Listing(req.body.listing);
     await newListing.save();
     // console.log(listing);
@@ -126,7 +126,8 @@ app.all("/{*splat}", (req, res, next) => {
 app.use((err, req, res, next) => {
   let { statusCode = 500, message = "Something went wrong" } = err;
   // res.send("Something went wrong");
-  res.status(statusCode).send(message);
+  // res.status(statusCode).send(message);
+  res.status(statusCode).render("error.ejs", { message });
 });
 
 app.listen(8080, () => {

@@ -44,6 +44,23 @@ app.use(express.static(path.join(__dirname, "/public")));
 app.get("/", (req, res) => {
   res.send("Hi! I m root");
 });
+
+// How we can convert schema validation in the form of middlewares.
+
+// Function  Validate Listing
+const validateListing = (req, res, next) => {
+  let { error } = listingSchema.validate(req.body);
+
+  if (result.error) {
+    throw new ExpressError(400, result.error.details[0].message);
+  } else {
+    next();
+  }
+};
+// We can alse pass this validateListing middleware with routes.
+// Like app.post(
+// "/listings",validateListing
+
 // Index Route ==>
 // GET /listings --> all listings
 app.get(
@@ -79,17 +96,14 @@ app.post(
     let result = listingSchema.validate(req.body);
 
     if (result.error) {
-      throw new ExpressError(
-        400,
-        result.error.details[0].message
-      );
+      throw new ExpressError(400, result.error.details[0].message);
     }
 
     const newListing = new Listing(req.body.listing);
     await newListing.save();
 
     res.redirect("/listings");
-  })
+  }),
 );
 // Update Route: Edit and Update route
 // Get-->/listings/:id/edit --->render edit form-->submit --->PUT-->/listings/:id
@@ -107,6 +121,7 @@ app.get(
 // Update route
 app.put(
   "/listings/:id",
+  validateListing,
   wrapAsync(async (req, res) => {
     let { id } = req.params;
     await Listing.findByIdAndUpdate(id, { ...req.body.listing }); //{...req.body.listing }--> We will convert these parameters into individual values.

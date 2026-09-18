@@ -7,6 +7,7 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
+const { listingSchema } = require("./schema.js");
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 
@@ -74,17 +75,21 @@ app.get(
 //Create route
 app.post(
   "/listings",
-  wrapAsync(async (req, res, next) => {
-    // let { title, description, price, image, location, country } = req.body;
-    // let listing = req.body.listing; //Alternate and show way instead of above line.
-    if (!req.body.listing) {
-      throw new ExpressError(400, "Send valid data for listing");
+  wrapAsync(async (req, res) => {
+    let result = listingSchema.validate(req.body);
+
+    if (result.error) {
+      throw new ExpressError(
+        400,
+        result.error.details[0].message
+      );
     }
+
     const newListing = new Listing(req.body.listing);
     await newListing.save();
-    // console.log(listing);
-    res.redirect("listings");
-  }),
+
+    res.redirect("/listings");
+  })
 );
 // Update Route: Edit and Update route
 // Get-->/listings/:id/edit --->render edit form-->submit --->PUT-->/listings/:id

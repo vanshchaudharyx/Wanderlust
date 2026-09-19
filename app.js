@@ -50,9 +50,8 @@ app.get("/", (req, res) => {
 // Function  Validate Listing
 const validateListing = (req, res, next) => {
   let { error } = listingSchema.validate(req.body);
-
-  if (result.error) {
-    throw new ExpressError(400, result.error.details[0].message);
+  if (error) {
+    throw new ExpressError(400, error);
   } else {
     next();
   }
@@ -92,12 +91,13 @@ app.get(
 //Create route
 app.post(
   "/listings",
+  validateListing,
   wrapAsync(async (req, res) => {
-    let result = listingSchema.validate(req.body);
+    // let result = listingSchema.validate(req.body);
 
-    if (result.error) {
-      throw new ExpressError(400, result.error.details[0].message);
-    }
+    // if (result.error) {
+    //   throw new ExpressError(400, result.error.details[0].message);
+    // }
 
     const newListing = new Listing(req.body.listing);
     await newListing.save();

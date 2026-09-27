@@ -7,7 +7,7 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
-const { listingSchema } = require("./schema.js");
+const { listingSchema, reviewSchema } = require("./schema.js");
 const Review = require("./models/review.js");
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
@@ -61,6 +61,14 @@ const validateListing = (req, res, next) => {
 // Like app.post(
 // "/listings",validateListing
 
+const validateReview = (req, res, next) => {
+  let { error } = reviewSchema.validate(req.body);
+  if (error) {
+    throw new ExpressError(400, error);
+  } else {
+    next();
+  }
+};
 // Index Route ==>
 // GET /listings --> all listings
 app.get(
@@ -141,17 +149,21 @@ app.delete(
 );
 // Reviews Route
 // POST Route-->
-app.post("/listings/:id/reviews", async (req, res) => {
-  let listing = await Listing.findById(req.params.id);
-  let newReview = new Review(req.body.review);
-  listing.reviews.push(newReview);
-  await newReview.save();
-  await listing.save();
+app.post(
+  "/listings/:id/reviews",
+  validateReview,
+  wrapAsync(async (req, res) => {
+    let listing = await Listing.findById(req.params.id);
+    let newReview = new Review(req.body.review);
+    listing.reviews.push(newReview);
+    await newReview.save();
+    await listing.save();
 
-//   console.log("New Review Saved");
-//   res.send("New Review Saved");
-res.redirect(`/listings/${listing._id}`)
-});
+    //   console.log("New Review Saved");
+    //   res.send("New Review Saved");
+    res.redirect(`/listings/${listing._id}`);
+  }),
+);
 
 app.all("/{*splat}", (req, res, next) => {
   next(new ExpressError(404, "Page not Found"));

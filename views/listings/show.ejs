@@ -59,7 +59,10 @@
                                 <%=review.rating%>&#9733;
                             </p>
                         </div>
+                        <form action="/listings/<%=listing._id%>/reviews/<%=review._id%>?_method=DELETE" class="mb-3" method="POST">
+                            <Button class="btn btn-sm btn-dark">Delete</Button></form>
                     </div>
+
 
                     <% } %>
             </div>

@@ -165,6 +165,17 @@ app.post(
     res.redirect(`/listings/${listing._id}`);
   }),
 );
+//Delete Review route-->
+app.delete(
+  "/listings/:id/reviews/:reviewID",
+  wrapAsync(async (req, res) => {
+    let { id, reviewID } = req.params;
+    // Mongo pull operator--> The $pull opeprator removes from an existing array all instances of a value or values that matches a specified condition.
+    await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewID } });
+    await Review.findByIdAndDelete(reviewID);
+    res.redirect(`/listings/${id}`);
+  }),
+);
 
 app.all("/{*splat}", (req, res, next) => {
   next(new ExpressError(404, "Page not Found"));

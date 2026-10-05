@@ -10,6 +10,8 @@ const ExpressError = require("./utils/ExpressError.js");
 const { listingSchema, reviewSchema } = require("./schema.js");
 const Review = require("./models/review.js");
 
+const listings = require("./routes/listing.js");
+
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 
 main()
@@ -48,15 +50,7 @@ app.get("/", (req, res) => {
 
 // How we can convert schema validation in the form of middlewares.
 
-// Function  Validate Listing
-const validateListing = (req, res, next) => {
-  let { error } = listingSchema.validate(req.body);
-  if (error) {
-    throw new ExpressError(400, error);
-  } else {
-    next();
-  }
-};
+
 // We can alse pass this validateListing middleware with routes.
 // Like app.post(
 // "/listings",validateListing
@@ -69,85 +63,8 @@ const validateReview = (req, res, next) => {
     next();
   }
 };
-// Index Route ==>
-// GET /listings --> all listings
-app.get(
-  "/listings",
-  wrapAsync(async (req, res) => {
-    let allListings = await Listing.find({});
-    // console.log(allListings[0].location);
-    res.render("listings/index.ejs", { allListings });
-  }),
-);
+ app.use("/listings",listings)
 
-// This new route created above the show route because node will consider new as id.
-//Create: New and create Route-->
-// GET /listing/new --> FORM--> Submit--> POST-->/listing
-app.get("/listings/new", (req, res) => {
-  res.render("listings/new.ejs");
-});
-
-// Show Route-->
-app.get(
-  "/listings/:id",
-  wrapAsync(async (req, res) => {
-    let { id } = req.params;
-    const listing = await Listing.findById(id).populate("reviews");
-    // console.log(listing.reviews);
-    res.render("listings/show.ejs", { listing });
-  }),
-);
-
-//Create route
-app.post(
-  "/listings",
-  validateListing,
-  wrapAsync(async (req, res) => {
-    // let result = listingSchema.validate(req.body);
-
-    // if (result.error) {
-    //   throw new ExpressError(400, result.error.details[0].message);
-    // }
-
-    const newListing = new Listing(req.body.listing);
-    await newListing.save();
-
-    res.redirect("/listings");
-  }),
-);
-// Update Route: Edit and Update route
-// Get-->/listings/:id/edit --->render edit form-->submit --->PUT-->/listings/:id
-
-// Edit route-->
-app.get(
-  "/listings/:id/edit",
-  wrapAsync(async (req, res) => {
-    let { id } = req.params;
-    const listing = await Listing.findById(id);
-    res.render("listings/edit.ejs", { listing });
-  }),
-);
-
-// Update route
-app.put(
-  "/listings/:id",
-  validateListing,
-  wrapAsync(async (req, res) => {
-    let { id } = req.params;
-    await Listing.findByIdAndUpdate(id, { ...req.body.listing }); //{...req.body.listing }--> We will convert these parameters into individual values.
-    res.redirect(`/listings/${id}`); //Redirect to show route
-  }),
-);
-//Delete route-->
-app.delete(
-  "/listings/:id",
-  wrapAsync(async (req, res) => {
-    let { id } = req.params;
-    let deletedListing = await Listing.findByIdAndDelete(id);
-    // console.log(deletedListing);
-    res.redirect("/listings");
-  }),
-);
 // Reviews Route
 // POST Route-->
 app.post(

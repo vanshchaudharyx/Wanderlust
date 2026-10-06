@@ -11,6 +11,7 @@ const { listingSchema, reviewSchema } = require("./schema.js");
 const Review = require("./models/review.js");
 
 const listings = require("./routes/listing.js");
+const reviews = require("./routes/review.js");
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 
@@ -31,18 +32,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
-// app.get("/testListing", async (req, res) => {
-//   let sampleListing = new Listing({
-//     title: "My New Villa",
-//     description: "By the beach",
-//     price: 1200,
-//     location: "Goa",
-//     country: "India",
-//   });
-//   await sampleListing.save();
-//   console.log("Sample was saved");
-//   res.send("Successful testing");
-// });
+
+app.use("/listings", listings);
+app.use("/listings/:id/reviews", reviews);
+
 
 app.get("/", (req, res) => {
   res.send("Hi! I m root");
@@ -50,49 +43,9 @@ app.get("/", (req, res) => {
 
 // How we can convert schema validation in the form of middlewares.
 
-
 // We can alse pass this validateListing middleware with routes.
 // Like app.post(
 // "/listings",validateListing
-
-const validateReview = (req, res, next) => {
-  let { error } = reviewSchema.validate(req.body);
-  if (error) {
-    throw new ExpressError(400, error);
-  } else {
-    next();
-  }
-};
- app.use("/listings",listings)
-
-// Reviews Route
-// POST Route-->
-app.post(
-  "/listings/:id/reviews",
-  validateReview,
-  wrapAsync(async (req, res) => {
-    let listing = await Listing.findById(req.params.id);
-    let newReview = new Review(req.body.review);
-    listing.reviews.push(newReview);
-    await newReview.save();
-    await listing.save();
-
-    //   console.log("New Review Saved");
-    //   res.send("New Review Saved");
-    res.redirect(`/listings/${listing._id}`);
-  }),
-);
-//Delete Review route-->
-app.delete(
-  "/listings/:id/reviews/:reviewID",
-  wrapAsync(async (req, res) => {
-    let { id, reviewID } = req.params;
-    // Mongo pull operator--> The $pull opeprator removes from an existing array all instances of a value or values that matches a specified condition.
-    await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewID } });
-    await Review.findByIdAndDelete(reviewID);
-    res.redirect(`/listings/${id}`);
-  }),
-);
 
 app.all("/{*splat}", (req, res, next) => {
   next(new ExpressError(404, "Page not Found"));

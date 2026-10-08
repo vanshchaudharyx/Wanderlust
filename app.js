@@ -42,6 +42,12 @@ const sessionOption = {
   secret: "mysupersecretcode",
   resave: false,
   saveUninitialized: true,
+  //Cookie expiration->
+  cookie: {
+    expires: Date.now() + 7 * 24 * 60 * 60 * 1000, //This means after 1 week because Date.now return time in ms.
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+  },
 };
 app.use(session(sessionOption));
 

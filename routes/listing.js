@@ -82,6 +82,7 @@ router.put(
   wrapAsync(async (req, res) => {
     let { id } = req.params;
     await Listing.findByIdAndUpdate(id, { ...req.body.listing }); //{...req.body.listing }--> We will convert these parameters into individual values.
+    req.flash("success", "Listing Updated");
     res.redirect(`/listings/${id}`); //Redirect to show route
   }),
 );
@@ -91,6 +92,7 @@ router.delete(
   wrapAsync(async (req, res) => {
     let { id } = req.params;
     let deletedListing = await Listing.findByIdAndDelete(id);
+    req.flash("success", "Listing Deleted");
     // console.log(deletedListing);
     res.redirect("/listings");
   }),

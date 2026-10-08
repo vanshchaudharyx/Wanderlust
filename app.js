@@ -9,6 +9,7 @@ const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
 const { listingSchema, reviewSchema } = require("./schema.js");
 const Review = require("./models/review.js");
+const session = require("express-session");
 
 const listings = require("./routes/listing.js");
 const reviews = require("./routes/review.js");
@@ -36,6 +37,13 @@ app.use(express.static(path.join(__dirname, "/public")));
 app.use("/listings", listings);
 app.use("/listings/:id/reviews", reviews);
 
+// Session options.
+const sessionOption = {
+  secret: "mysupersecretcode",
+  resave: false,
+  saveUninitialized: true,
+};
+app.use(session(sessionOption));
 
 app.get("/", (req, res) => {
   res.send("Hi! I m root");

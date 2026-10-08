@@ -5,7 +5,6 @@ const wrapAsync = require("../utils/wrapAsync.js");
 const { listingSchema, reviewSchema } = require("../schema.js");
 const ExpressError = require("../utils/ExpressError.js");
 
-
 // Function  Validate Listing
 const validateListing = (req, res, next) => {
   let { error } = listingSchema.validate(req.body);
@@ -58,6 +57,7 @@ router.post(
 
     const newListing = new Listing(req.body.listing);
     await newListing.save();
+    req.flash("success", "New Listing is created"); //This message is accessed by res.local variable
 
     res.redirect("/listings");
   }),
@@ -95,4 +95,4 @@ router.delete(
     res.redirect("/listings");
   }),
 );
-module.exports=router;
+module.exports = router;

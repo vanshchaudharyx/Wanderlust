@@ -10,6 +10,7 @@ const ExpressError = require("./utils/ExpressError.js");
 const { listingSchema, reviewSchema } = require("./schema.js");
 const Review = require("./models/review.js");
 const session = require("express-session");
+const flash = require("connect-flash");
 
 const listings = require("./routes/listing.js");
 const reviews = require("./routes/review.js");
@@ -34,8 +35,7 @@ app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 
-app.use("/listings", listings);
-app.use("/listings/:id/reviews", reviews);
+
 
 // Session options.
 const sessionOption = {
@@ -49,17 +49,26 @@ const sessionOption = {
     httpOnly: true,
   },
 };
-app.use(session(sessionOption));
-
 app.get("/", (req, res) => {
   res.send("Hi! I m root");
 });
 
+app.use(session(sessionOption));
+app.use(flash());
+
+
+app.use((req, res, next) => {
+  res.locals.success = req.flash("success");
+  next();
+});
+
+app.use("/listings", listings);
+app.use("/listings/:id/reviews", reviews);
 // How we can convert schema validation in the form of middlewares.
 
 // We can alse pass this validateListing middleware with routes.
 // Like app.post(
-// "/listings",validateListing
+// "/listings",c
 
 app.all("/{*splat}", (req, res, next) => {
   next(new ExpressError(404, "Page not Found"));

@@ -12,7 +12,7 @@ const Review = require("./models/review.js");
 const session = require("express-session");
 const flash = require("connect-flash");
 const passport = require("passport");
-const localStrategy = require("passport-local");
+const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
 
 const listings = require("./routes/listing.js");
@@ -56,6 +56,16 @@ app.get("/", (req, res) => {
 
 app.use(session(sessionOption));
 app.use(flash());
+// In a session we dont need to login again and again for different requests thats why we use passport after session middleware.
+
+// A middleware that initializes passport.
+app.use(passport.initialize);
+app.use(passport.session); //A web application needs the ability to identify users as the browsfrom page to page.
+// This series of requests and responses,each associated with the same user,is known as a person.
+passport.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());//To store the user related info in session that means serialize.
+passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");

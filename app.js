@@ -59,13 +59,25 @@ app.use(flash());
 // In a session we dont need to login again and again for different requests thats why we use passport after session middleware.
 
 // A middleware that initializes passport.
-app.use(passport.initialize);
-app.use(passport.session); //A web application needs the ability to identify users as the browsfrom page to page.
+app.use(passport.initialize());
+app.use(passport.session()); //A web application needs the ability to identify users as the browsfrom page to page.
 // This series of requests and responses,each associated with the same user,is known as a person.
 passport.use(new LocalStrategy(User.authenticate()));
 
-passport.serializeUser(User.serializeUser());//To store the user related info in session that means serialize.
+passport.serializeUser(User.serializeUser()); //To store the user related info in session that means serialize.
 passport.deserializeUser(User.deserializeUser());
+
+// Demo User
+app.get("/demouser", async (req, res) => {
+  let fakeUser = new User({
+    email: "student@gmail.com",
+    username: "delta-student",
+  });
+  // To store this user.
+  const registeredUser = await User.register(fakeUser, "helloworld"); //helloworld is the password.
+  // This register method automatically checks our username us unique or not.
+  res.send(registeredUser);
+});
 
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
@@ -73,7 +85,6 @@ app.use((req, res, next) => {
   // console.log(res.locals.success);
   next();
 });
-
 app.use("/listings", listings);
 app.use("/listings/:id/reviews", reviews);
 // How we can convert schema validation in the form of middlewares.

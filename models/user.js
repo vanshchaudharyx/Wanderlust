@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const passportLocalMongoose = require("passport-local-mongoose");
+const passportLocalMongoose = require("passport-local-mongoose").default;
 
 const userSchema = new Schema({
   email: {
@@ -9,6 +9,6 @@ const userSchema = new Schema({
   },
   // Password-local-mongoose automatically creates the username and password.
 });
-User.plugin(passwordLocalMongoose); //This automatically creates username and password(salting,hashed password).
+userSchema.plugin(passportLocalMongoose); //This automatically creates username and password(salting,hashed password).
 
 module.exports = mongoose.model("User", userSchema);

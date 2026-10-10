@@ -76,16 +76,16 @@ app.use((req, res, next) => {
 });
 
 // Demo User
-app.get("/demouser", async (req, res) => {
-  let fakeUser = new User({
-    email: "student@gmail.com",
-    username: "delta-student",
-  });
-  // To store this user.
-  const registeredUser = await User.register(fakeUser, "helloworld"); //helloworld is the password.
-  // This register method automatically checks our username us unique or not.
-  res.send(registeredUser);
-});
+// app.get("/demouser", async (req, res) => {
+//   let fakeUser = new User({
+//     email: "student@gmail.com",
+//     username: "delta-student",
+//   });
+//   // To store this user.
+//   const registeredUser = await User.register(fakeUser, "helloworld"); //helloworld is the password.
+//   // This register method automatically checks our username us unique or not.
+//   res.send(registeredUser);
+// });
 
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);

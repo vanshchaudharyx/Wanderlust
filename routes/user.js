@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require("../models/user.js");
 const wrapAsync = require("../utils/wrapAsync");
 const passport = require("passport");
+const { saveRedirectUrl } = require("../middleware.js");
 
 router.get("/signup", (req, res) => {
   res.render("users/signup.ejs");
@@ -36,13 +37,15 @@ router.get("/login", (req, res) => {
 
 router.post(
   "/login",
+  saveRedirectUrl,
   passport.authenticate("local", {
     failureRedirect: "/login", //if this middleware successfully works then we enter in the callback if not then redirect to login.
     failureFlash: true,
   }), // passport.authenticate() is the middleware that use in post route before authentication.
   async (req, res) => {
     req.flash("success", "Welcome back to Wanderlust!");
-    res.redirect("/listings");
+    let redirectUrl = res.locals.redirectUrl || "/listings";
+    res.redirect(redirectUrl);
   },
 );
 // Logout Route

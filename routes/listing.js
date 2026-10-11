@@ -39,12 +39,15 @@ router.get(
   "/:id",
   wrapAsync(async (req, res) => {
     let { id } = req.params;
-    const listing = await Listing.findById(id).populate("reviews");
+    const listing = await Listing.findById(id)
+      .populate("reviews")
+      .populate("owner");
     // console.log(listing.reviews);
     if (!listing) {
       req.flash("error", "Listing you requested for does not exists!");
       return res.redirect("/listings");
     }
+    console.log(listing);
     res.render("listings/show.ejs", { listing });
   }),
 );
@@ -62,6 +65,7 @@ router.post(
     // }
 
     const newListing = new Listing(req.body.listing);
+    newListing.owner = req.user._id;
     await newListing.save();
     req.flash("success", "New Listing is created"); //This message is accessed by res.local variable
 

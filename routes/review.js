@@ -6,7 +6,7 @@ const { listingSchema, reviewSchema } = require("../schema.js");
 const ExpressError = require("../utils/ExpressError.js");
 const Review = require("../models/review.js");
 const Listing = require("../models/listing.js");
-const { validateReview, isLoggedIn } = require("../middleware.js");
+const { validateReview, isLoggedIn,isReviewAuthor } = require("../middleware.js");
 
 // Reviews Route
 // POST Route-->
@@ -32,6 +32,8 @@ router.post(
 //Delete Review route-->
 router.delete(
   "/:reviewID",
+  isLoggedIn,
+  isReviewAuthor,
   wrapAsync(async (req, res) => {
     let { id, reviewID } = req.params;
     // Mongo pull operator--> The $pull opeprator removes from an existing array all instances of a value or values that matches a specified condition.

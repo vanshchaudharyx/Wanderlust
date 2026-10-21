@@ -6,8 +6,10 @@ const { listingSchema, reviewSchema } = require("../schema.js");
 const ExpressError = require("../utils/ExpressError.js");
 const { isLoggedIn, isOwner, validateListing } = require("../middleware.js");
 
-const multer  = require('multer')
-const upload = multer({ dest: 'uploads/' })
+const multer = require("multer");
+const { storage } = require("../cloudConfig.js");
+// const upload = multer({ dest: "uploads/" });
+const upload = multer({storage});
 
 // Controllers-->
 const listingController = require("../controllers/listing.js");
@@ -20,7 +22,7 @@ router
   //   validateListing,
   //   wrapAsync(listingController.createListing),
   // );
-  .post(upload.single("listing[image]"),(req, res) => {
+  .post(upload.single("listing[image]"), (req, res) => {
     res.send(req.file);
   });
 

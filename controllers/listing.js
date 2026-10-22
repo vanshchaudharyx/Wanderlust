@@ -58,7 +58,15 @@ module.exports.updateListing = async (req, res) => {
   //   req.flash("error", "You don't have permission to edit");
   //   return res.redirect(`/listings/${id}`); //Redirect to show route
   // }//We will create this as middleware.
-  await Listing.findByIdAndUpdate(id, { ...req.body.listing }); //{...req.body.listing }--> We will convert these parameters into individual values.
+  let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing }); //{...req.body.listing }--> We will convert these parameters into individual values.
+
+  if (typeof req.file !== "undefined ") {
+    let url = req.file.path;
+    let filename = req.file.filename;
+    listing.image = { url, filename };
+    await listing.save();
+  }
+
   req.flash("success", "Listing Updated");
   res.redirect(`/listings/${id}`); //Redirect to show route
 };

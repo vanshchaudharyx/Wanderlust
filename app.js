@@ -50,7 +50,7 @@ app.use(express.static(path.join(__dirname, "/public")));
 const store = MongoStore.create({
   mongoUrl: db_Url,
   crypto: {
-    secret: "mysupersecretcode",
+    secret: process.env.SECRET,
   },
   touchAfter: 24 * 3600,
 });
@@ -61,7 +61,7 @@ store.on("error", (err) => {
 // Session options.
 const sessionOption = {
   store, //Now our session info store in our atlas database.
-  secret: "mysupersecretcode",
+  secret: process.env.SECRET,
   resave: false,
   saveUninitialized: true,
   //Cookie expiration->

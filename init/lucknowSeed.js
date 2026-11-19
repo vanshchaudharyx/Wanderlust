@@ -195,7 +195,7 @@ async function seedLucknow() {
 
     // Username can be passed as a CLI argument: node init/lucknowSeed.js <username>
     // e.g. node init/lucknowSeed.js delta-student
-    const targetUsername = process.argv[2];
+    const targetUsername = process.argv[2] ? process.argv[2].toLowerCase() : null;
 
     let ownerUser = null;
     if (targetUsername) {

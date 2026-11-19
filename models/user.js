@@ -10,6 +10,11 @@ const userSchema = new Schema({
   },
   // Password-local-mongoose automatically creates the username and password.
 });
-userSchema.plugin(passportLocalMongoose); //This automatically creates username and password(salting,hashed password).
+userSchema.plugin(passportLocalMongoose, {
+  usernameLowerCase: true,
+  errorMessages: {
+    UserExistsError: "A user with the given username is already registered",
+  },
+});
 
 module.exports = mongoose.model("User", userSchema);

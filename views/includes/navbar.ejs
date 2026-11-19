@@ -6,16 +6,16 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
+            <div class="navbar-nav me-2">
 
                 <a class="nav-link" href="/listings">Explore</a>
 
             </div>
 
             <!-- Search Bar -->
-            <div class="navbar-nav mx-auto my-2 my-md-0 position-relative" id="searchContainer">
-                <form class="d-flex" role="search" action="/listings" method="GET" id="searchForm">
-                    <div class="input-group">
+            <div class="navbar-nav mx-auto my-2 my-md-0 position-relative search-nav-container" id="searchContainer">
+                <form class="d-flex w-100" role="search" action="/listings" method="GET" id="searchForm">
+                    <div class="input-group search-input-group w-100">
                         <input
                             class="form-control search-input"
                             type="search"
@@ -35,7 +35,7 @@
                 <ul class="dropdown-menu shadow search-suggestions-dropdown" id="searchSuggestions"></ul>
             </div>
 
-            <div class="navbar-nav ms-auto">
+            <div class="navbar-nav ms-2">
                 <a class="nav-link" href="/listings/new">Airbnb your home</a>
 
                 <!-- Dark / Light Theme Toggle -->

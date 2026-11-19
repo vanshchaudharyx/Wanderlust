@@ -35,53 +35,73 @@
 
         <!-- <h3>All Listings</h3> -->
         <div id="filters">
-            <a href="/listings" class="filter <%- !activeCategory ? 'active-filter' : '' %>">
+            <a href="/listings<%= searchQuery ? '?q=' + encodeURIComponent(searchQuery) : '' %>" class="filter <%- !activeCategory ? 'active-filter' : '' %>">
                 <div><i class="fa-solid fa-globe"></i></div>
                 <p>All</p>
             </a>
-            <a href="/listings?category=Trending" class="filter <%- activeCategory === 'Trending' ? 'active-filter' : '' %>">
+            <a href="/listings?category=Trending<%= searchQuery ? '&q=' + encodeURIComponent(searchQuery) : '' %>" class="filter <%- activeCategory === 'Trending' ? 'active-filter' : '' %>">
                 <div><i class="fa-solid fa-fire"></i></div>
                 <p>Trending</p>
             </a>
-            <a href="/listings?category=Rooms" class="filter <%- activeCategory === 'Rooms' ? 'active-filter' : '' %>">
+            <a href="/listings?category=Rooms<%= searchQuery ? '&q=' + encodeURIComponent(searchQuery) : '' %>" class="filter <%- activeCategory === 'Rooms' ? 'active-filter' : '' %>">
                 <div><i class="fa-solid fa-bed"></i></div>
                 <p>Rooms</p>
             </a>
-            <a href="/listings?category=Iconic Cities" class="filter <%- activeCategory === 'Iconic Cities' ? 'active-filter' : '' %>">
+            <a href="/listings?category=Iconic Cities<%= searchQuery ? '&q=' + encodeURIComponent(searchQuery) : '' %>" class="filter <%- activeCategory === 'Iconic Cities' ? 'active-filter' : '' %>">
                 <div><i class="fa-solid fa-mountain-city"></i></div>
                 <p>Iconic Cities</p>
             </a>
-            <a href="/listings?category=Mountains" class="filter <%- activeCategory === 'Mountains' ? 'active-filter' : '' %>">
+            <a href="/listings?category=Mountains<%= searchQuery ? '&q=' + encodeURIComponent(searchQuery) : '' %>" class="filter <%- activeCategory === 'Mountains' ? 'active-filter' : '' %>">
                 <div><i class="fa-solid fa-mountain"></i></div>
                 <p>Mountains</p>
             </a>
-            <a href="/listings?category=Castles" class="filter <%- activeCategory === 'Castles' ? 'active-filter' : '' %>">
+            <a href="/listings?category=Castles<%= searchQuery ? '&q=' + encodeURIComponent(searchQuery) : '' %>" class="filter <%- activeCategory === 'Castles' ? 'active-filter' : '' %>">
                 <div><i class="fa-solid fa-chess-rook"></i></div>
                 <p>Castles</p>
             </a>
-            <a href="/listings?category=Amazing Pools" class="filter <%- activeCategory === 'Amazing Pools' ? 'active-filter' : '' %>">
+            <a href="/listings?category=Amazing Pools<%= searchQuery ? '&q=' + encodeURIComponent(searchQuery) : '' %>" class="filter <%- activeCategory === 'Amazing Pools' ? 'active-filter' : '' %>">
                 <div><i class="fa-solid fa-person-swimming"></i></div>
                 <p>Amazing Pools</p>
             </a>
-            <a href="/listings?category=Camping" class="filter <%- activeCategory === 'Camping' ? 'active-filter' : '' %>">
+            <a href="/listings?category=Camping<%= searchQuery ? '&q=' + encodeURIComponent(searchQuery) : '' %>" class="filter <%- activeCategory === 'Camping' ? 'active-filter' : '' %>">
                 <div><i class="fa-solid fa-tent-arrows-down"></i></div>
                 <p>Camping</p>
             </a>
-            <a href="/listings?category=Farms" class="filter <%- activeCategory === 'Farms' ? 'active-filter' : '' %>">
+            <a href="/listings?category=Farms<%= searchQuery ? '&q=' + encodeURIComponent(searchQuery) : '' %>" class="filter <%- activeCategory === 'Farms' ? 'active-filter' : '' %>">
                 <div><i class="fa-solid fa-tractor"></i></div>
                 <p>Farms</p>
             </a>
-            <a href="/listings?category=Arctic" class="filter <%- activeCategory === 'Arctic' ? 'active-filter' : '' %>">
+            <a href="/listings?category=Arctic<%= searchQuery ? '&q=' + encodeURIComponent(searchQuery) : '' %>" class="filter <%- activeCategory === 'Arctic' ? 'active-filter' : '' %>">
                 <div><i class="fa-solid fa-snowflake"></i></div>
                 <p>Arctic</p>
             </a>
         </div>
 
+        <% if (searchQuery) { %>
+            <div class="d-flex justify-content-between align-items-center mt-3 mb-2">
+                <p class="mb-0 fs-5 text-muted">
+                    Results for "<strong class="text-body"><%= searchQuery %></strong>"
+                    <% if (activeCategory) { %> in <strong class="text-body"><%= activeCategory %></strong><% } %>
+                    <span class="badge bg-secondary ms-2"><%= allListings.length %></span>
+                </p>
+                <a href="/listings<%= activeCategory ? '?category=' + encodeURIComponent(activeCategory) : '' %>" class="btn btn-sm btn-outline-secondary">
+                    <i class="fa-solid fa-xmark me-1"></i>Clear search
+                </a>
+            </div>
+        <% } %>
+
         <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
             <% if (allListings.length === 0) { %>
                 <div class="col-12 text-center py-5">
-                    <p class="text-muted">No listings found in this category.</p>
-                    <a href="/listings" class="btn btn-dark mt-2">View All</a>
+                    <i class="fa-solid fa-magnifying-glass fa-3x mb-3 text-muted"></i>
+                    <h4>No listings found</h4>
+                    <% if (searchQuery) { %>
+                        <p class="text-muted">We couldn't find anything matching "<%= searchQuery %>". Try searching for a different destination, city or country.</p>
+                        <a href="/listings" class="btn btn-dark mt-2">Clear search & filters</a>
+                    <% } else { %>
+                        <p class="text-muted">No listings found in this category.</p>
+                        <a href="/listings" class="btn btn-dark mt-2">View All</a>
+                    <% } %>
                 </div>
             <% } %>
             <%for (let listing of allListings){%>

@@ -6,11 +6,29 @@ const geocodingClient = mbxGeocoding({ accessToken: mapToken });
 
 module.exports.index = async (req, res) => {
   let filter = {};
-  if (req.query.category) {
-    filter.category = req.query.category;
+  const { category, q } = req.query;
+
+  if (category) {
+    filter.category = category;
   }
+
+  if (q && q.trim() !== "") {
+    // Escape regex special characters to prevent regex injection or syntax errors
+    const safeQuery = q.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp(safeQuery, "i");
+    filter.$or = [
+      { title: { $regex: regex } },
+      { location: { $regex: regex } },
+      { country: { $regex: regex } },
+    ];
+  }
+
   let allListings = await Listing.find(filter);
-  res.render("listings/index.ejs", { allListings, activeCategory: req.query.category || null });
+  res.render("listings/index.ejs", {
+    allListings,
+    activeCategory: category || null,
+    searchQuery: q ? q.trim() : "",
+  });
 };
 
 module.exports.renderNewForm = (req, res) => {

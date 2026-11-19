@@ -62,6 +62,20 @@
                     </div>
                 </div>
                 <br><br>
+                <div class="mb-2">
+                    <label for="category" class="form-label">Category</label>
+                    <select name="listing[category]" id="category" class="form-select" required>
+                        <option value="" disabled <%- !listing.category ? 'selected' : '' %>>-- Select a category --</option>
+                        <% const categories = ["Trending","Rooms","Iconic Cities","Mountains","Castles","Amazing Pools","Camping","Farms","Arctic"]; %>
+                        <% for (let cat of categories) { %>
+                            <option value="<%= cat %>" <%- listing.category === cat ? 'selected' : '' %>><%= cat %></option>
+                        <% } %>
+                    </select>
+                    <div class="invalid-feedback">
+                        Please select a category.
+                    </div>
+                </div>
+                <br><br>
 
                 <button class="btn btn-dark edit-btn">Edit</button>
                 <br><br><br>

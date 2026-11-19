@@ -11,11 +11,19 @@
             margin-right: 2rem;
             margin-top: 2rem;
             opacity: 0.7;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
         }
 
         .filter:hover {
             opacity: 1;
-            cursor: pointer;
+        }
+
+        .filter.active-filter {
+            opacity: 1;
+            border-bottom: 2px solid #222;
+            padding-bottom: 2px;
         }
 
         .filter p {
@@ -27,61 +35,55 @@
 
         <!-- <h3>All Listings</h3> -->
         <div id="filters">
-            <div class="filter">
+            <a href="/listings" class="filter <%- !activeCategory ? 'active-filter' : '' %>">
+                <div><i class="fa-solid fa-globe"></i></div>
+                <p>All</p>
+            </a>
+            <a href="/listings?category=Trending" class="filter <%- activeCategory === 'Trending' ? 'active-filter' : '' %>">
                 <div><i class="fa-solid fa-fire"></i></div>
                 <p>Trending</p>
-            </div>
-            <div class="filter">
+            </a>
+            <a href="/listings?category=Rooms" class="filter <%- activeCategory === 'Rooms' ? 'active-filter' : '' %>">
                 <div><i class="fa-solid fa-bed"></i></div>
                 <p>Rooms</p>
-            </div>
-            <div class="filter">
-                <div><i class="fa-solid fa-mountain-city"></i>
-                </div>
+            </a>
+            <a href="/listings?category=Iconic Cities" class="filter <%- activeCategory === 'Iconic Cities' ? 'active-filter' : '' %>">
+                <div><i class="fa-solid fa-mountain-city"></i></div>
                 <p>Iconic Cities</p>
-            </div>
-            <div class="filter">
-                <div><i class="fa-solid fa-mountain"></i>
-                </div>
+            </a>
+            <a href="/listings?category=Mountains" class="filter <%- activeCategory === 'Mountains' ? 'active-filter' : '' %>">
+                <div><i class="fa-solid fa-mountain"></i></div>
                 <p>Mountains</p>
-
-            </div>
-            <div class="filter">
-                <div><i class="fa-solid fa-mountain"></i>
-                </div>
+            </a>
+            <a href="/listings?category=Castles" class="filter <%- activeCategory === 'Castles' ? 'active-filter' : '' %>">
+                <div><i class="fa-solid fa-chess-rook"></i></div>
                 <p>Castles</p>
-            </div>
-            <div class="filter">
-                <div><i class="fa-solid fa-person-swimming"></i>
-
-                </div>
+            </a>
+            <a href="/listings?category=Amazing Pools" class="filter <%- activeCategory === 'Amazing Pools' ? 'active-filter' : '' %>">
+                <div><i class="fa-solid fa-person-swimming"></i></div>
                 <p>Amazing Pools</p>
-            </div>
-            <div class="filter">
-                <div><i class="fa-solid fa-tent-arrows-down"></i>
-
-                </div>
+            </a>
+            <a href="/listings?category=Camping" class="filter <%- activeCategory === 'Camping' ? 'active-filter' : '' %>">
+                <div><i class="fa-solid fa-tent-arrows-down"></i></div>
                 <p>Camping</p>
-
-            </div>
-            <div class="filter">
-                <div><i class="fa-solid fa-tractor"></i>
-
-                </div>
+            </a>
+            <a href="/listings?category=Farms" class="filter <%- activeCategory === 'Farms' ? 'active-filter' : '' %>">
+                <div><i class="fa-solid fa-tractor"></i></div>
                 <p>Farms</p>
-            </div>
-            <div class="filter">
-                <div><i class="fa-solid fa-snowflake"></i>
-
-                </div>
+            </a>
+            <a href="/listings?category=Arctic" class="filter <%- activeCategory === 'Arctic' ? 'active-filter' : '' %>">
+                <div><i class="fa-solid fa-snowflake"></i></div>
                 <p>Arctic</p>
-            </div>
-
-
+            </a>
         </div>
-        <!--<form method="GET" action="/listings/new"><Button>Create New Listing</Button></form> -->
 
         <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
+            <% if (allListings.length === 0) { %>
+                <div class="col-12 text-center py-5">
+                    <p class="text-muted">No listings found in this category.</p>
+                    <a href="/listings" class="btn btn-dark mt-2">View All</a>
+                </div>
+            <% } %>
             <%for (let listing of allListings){%>
                 <a href="/listings/<%=listing.id%>" class="listing-link">
                     <div class="card col listing-card">

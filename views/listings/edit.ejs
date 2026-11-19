@@ -43,7 +43,14 @@
                             Please enter a valid Price.
                         </div>
                     </div>
-                    <div class="mb-2 col-md-8">
+                    <div class="mb-2 col-4">
+                        <label for="maxGuests" class="form-label">Max Guests</label>
+                        <input name="listing[maxGuests]" type="number" value="<%=listing.maxGuests || 4%>" min="1" class="form-control" required />
+                        <div class="invalid-feedback">
+                            Please enter max guests (min 1).
+                        </div>
+                    </div>
+                    <div class="mb-2 col-md-4">
                         <label for="country" class="form-label">Country</label>
                         <input name="listing[country]" value="<%=listing.country%>" type="text" class="form-control"
                             required />

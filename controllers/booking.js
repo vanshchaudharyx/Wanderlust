@@ -2,7 +2,7 @@ const Booking = require("../models/booking.js");
 const Listing = require("../models/listing.js");
 const ExpressError = require("../utils/ExpressError.js");
 
-// Helper: calculate nights between two dates
+// Helper: whole-day difference between two dates
 const calcNights = (checkIn, checkOut) => {
   const msPerDay = 1000 * 60 * 60 * 24;
   return Math.round((new Date(checkOut) - new Date(checkIn)) / msPerDay);
@@ -23,12 +23,18 @@ module.exports.createBooking = async (req, res) => {
   }
 
   const { checkIn, checkOut, guests } = req.body.booking;
-  const checkInDate = new Date(checkIn);
+  const checkInDate  = new Date(checkIn);
   const checkOutDate = new Date(checkOut);
+
+  // Normalise today to midnight for fair comparison
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  // Date sanity checks
+  // ── Server-side date validations ──────────────────────────────────────────
+  if (isNaN(checkInDate) || isNaN(checkOutDate)) {
+    req.flash("error", "Invalid date values provided.");
+    return res.redirect(`/listings/${listing._id}`);
+  }
   if (checkInDate < today) {
     req.flash("error", "Check-in date cannot be in the past.");
     return res.redirect(`/listings/${listing._id}`);
@@ -38,36 +44,46 @@ module.exports.createBooking = async (req, res) => {
     return res.redirect(`/listings/${listing._id}`);
   }
 
-  // Overlap check: find any active booking that overlaps with requested dates
+  // ── Guest count validation ────────────────────────────────────────────────
+  const guestsNum = parseInt(guests, 10);
+  const maxGuests = listing.maxGuests || 4;
+  if (!Number.isInteger(guestsNum) || guestsNum < 1) {
+    req.flash("error", "Guests must be at least 1.");
+    return res.redirect(`/listings/${listing._id}`);
+  }
+  if (guestsNum > maxGuests) {
+    req.flash("error", `This listing allows a maximum of ${maxGuests} guest${maxGuests > 1 ? "s" : ""}.`);
+    return res.redirect(`/listings/${listing._id}`);
+  }
+
+  // ── Overlap check: pending or confirmed bookings only ─────────────────────
+  // Overlap condition: existing.checkIn < newCheckOut AND existing.checkOut > newCheckIn
   const overlap = await Booking.findOne({
     listing: listing._id,
     status: { $in: ["pending", "confirmed"] },
-    checkIn: { $lt: checkOutDate },
+    checkIn:  { $lt: checkOutDate },
     checkOut: { $gt: checkInDate },
   });
 
   if (overlap) {
-    req.flash(
-      "error",
-      "These dates are already booked. Please choose different dates."
-    );
+    req.flash("error", "These dates are already booked. Please choose different dates.");
     return res.redirect(`/listings/${listing._id}`);
   }
 
-  const nights = calcNights(checkInDate, checkOutDate);
+  const nights    = calcNights(checkInDate, checkOutDate);
   const totalPrice = nights * listing.price;
 
   const newBooking = new Booking({
-    listing: listing._id,
-    user: req.user._id,
-    checkIn: checkInDate,
-    checkOut: checkOutDate,
-    guests: Number(guests),
+    listing:    listing._id,
+    user:       req.user._id,
+    checkIn:    checkInDate,
+    checkOut:   checkOutDate,
+    guests:     guestsNum,
     totalPrice,
   });
 
   await newBooking.save();
-  req.flash("success", "Booking confirmed! Check your trips for details.");
+  req.flash("success", "Booking request sent! Check your trips for details.");
   res.redirect("/bookings/my-trips");
 };
 
@@ -76,10 +92,14 @@ module.exports.myTrips = async (req, res) => {
   const bookings = await Booking.find({ user: req.user._id })
     .populate("listing")
     .sort({ checkIn: 1 });
-  res.render("bookings/my-trips.ejs", { bookings });
+
+  // Filter out bookings whose listing was deleted
+  const validBookings = bookings.filter((b) => b.listing != null);
+
+  res.render("bookings/my-trips.ejs", { bookings: validBookings });
 };
 
-// DELETE /bookings/:bookingId  — cancel a booking (guest)
+// DELETE /bookings/:bookingId  — cancel a booking (guest); sets status, never deletes
 module.exports.cancelBooking = async (req, res) => {
   const booking = await Booking.findById(req.params.bookingId);
   if (!booking) {
@@ -97,6 +117,7 @@ module.exports.cancelBooking = async (req, res) => {
     return res.redirect("/bookings/my-trips");
   }
 
+  // Soft-cancel: status → cancelled, record is kept
   booking.status = "cancelled";
   await booking.save();
   req.flash("success", "Booking cancelled.");
@@ -105,7 +126,6 @@ module.exports.cancelBooking = async (req, res) => {
 
 // GET /bookings/reservations  — all bookings on listings owned by current user
 module.exports.reservations = async (req, res) => {
-  // Find all listings owned by current user
   const myListings = await Listing.find({ owner: req.user._id }).select("_id");
   const listingIds = myListings.map((l) => l._id);
 
@@ -119,9 +139,7 @@ module.exports.reservations = async (req, res) => {
 
 // PATCH /bookings/:bookingId/status  — confirm or reject (host only)
 module.exports.updateStatus = async (req, res) => {
-  const booking = await Booking.findById(req.params.bookingId).populate(
-    "listing"
-  );
+  const booking = await Booking.findById(req.params.bookingId).populate("listing");
   if (!booking) {
     req.flash("error", "Booking not found!");
     return res.redirect("/bookings/reservations");

@@ -26,6 +26,11 @@ const listingSchema = new Schema({
       "Arctic",
     ],
   },
+  maxGuests: {
+    type: Number,
+    default: 4,
+    min: 1,
+  },
   reviews: [
     {
       type: Schema.Types.ObjectId,

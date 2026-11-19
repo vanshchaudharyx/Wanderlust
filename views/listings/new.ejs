@@ -43,7 +43,15 @@
                         </div>
                     </div>
                     <br><br>
-                    <div class="mb-2 col-md-8">
+                    <div class="mb-2 col-4">
+                        <label for="maxGuests" class="form-label">Max Guests</label>
+                        <input name="listing[maxGuests]" type="number" placeholder="4" min="1" class="form-control" value="4" required />
+                        <div class="invalid-feedback">
+                            Please enter max guests (min 1).
+                        </div>
+                    </div>
+                    <br><br>
+                    <div class="mb-2 col-md-4">
                         <lable for="country" class="form-label">Country</lable>
                         <input name="listing[country]" placeholder="India" type="text" class="form-control" required />
                         <div class="invalid-feedback">

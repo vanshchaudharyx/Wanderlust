@@ -21,6 +21,7 @@ module.exports.listingSchema = Joi.object({
         "Arctic"
       )
       .required(),
+    maxGuests: Joi.number().integer().min(1).default(4),
   }).required(),
 });
 
@@ -33,7 +34,7 @@ module.exports.reviewSchema = Joi.object({
 
 module.exports.bookingSchema = Joi.object({
   booking: Joi.object({
-    checkIn: Joi.date().iso().required(),
+    checkIn: Joi.date().iso().min("now").required(),
     checkOut: Joi.date().iso().greater(Joi.ref("checkIn")).required(),
     guests: Joi.number().integer().min(1).required(),
   }).required(),

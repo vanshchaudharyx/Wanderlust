@@ -1,4 +1,5 @@
 const Listing = require("../models/listing");
+const Booking = require("../models/booking.js");
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const mapToken = process.env.MAP_TOKEN;
 const geocodingClient = mbxGeocoding({ accessToken: mapToken });
@@ -96,8 +97,23 @@ module.exports.updateListing = async (req, res) => {
 };
 module.exports.destroyListing = async (req, res) => {
   let { id } = req.params;
-  let deletedListing = await Listing.findByIdAndDelete(id);
+
+  // Block deletion if there are upcoming active bookings
+  const upcomingBooking = await Booking.findOne({
+    listing: id,
+    status: { $in: ["pending", "confirmed"] },
+    checkOut: { $gt: new Date() },
+  });
+
+  if (upcomingBooking) {
+    req.flash(
+      "error",
+      "Cannot delete this listing — it has upcoming bookings. Cancel or complete them first."
+    );
+    return res.redirect(`/listings/${id}`);
+  }
+
+  await Listing.findByIdAndDelete(id);
   req.flash("success", "Listing Deleted");
-  // console.log(deletedListing);
   res.redirect("/listings");
 };

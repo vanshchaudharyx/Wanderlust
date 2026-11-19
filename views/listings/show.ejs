@@ -64,9 +64,9 @@
                             <div class="invalid-feedback">Please select a check-out date.</div>
                         </div>
                         <div class="col-12">
-                            <label class="form-label small fw-semibold">GUESTS</label>
-                            <input type="number" name="booking[guests]" id="guests" class="form-control" value="1" min="1" max="20" required>
-                            <div class="invalid-feedback">At least 1 guest required.</div>
+                            <label class="form-label small fw-semibold">GUESTS <span class="fw-normal text-muted">(max <%=listing.maxGuests || 4%>)</span></label>
+                            <input type="number" name="booking[guests]" id="guests" class="form-control" value="1" min="1" max="<%=listing.maxGuests || 4%>" required>
+                            <div class="invalid-feedback">Please enter between 1 and <%=listing.maxGuests || 4%> guests.</div>
                         </div>
                     </div>
                     <!-- Live price breakdown -->
@@ -191,6 +191,7 @@
             if (!checkInEl || !checkOutEl) return;
 
             const pricePerNight = <%- listing.price %>;
+            const maxGuests     = <%- listing.maxGuests || 4 %>;
             const breakdown     = document.getElementById("priceBreakdown");
             const nightsLabel   = document.getElementById("nightsLabel");
             const totalPrice    = document.getElementById("totalPrice");

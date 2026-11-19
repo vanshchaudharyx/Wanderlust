@@ -104,6 +104,11 @@ app.use("/listings/:id/bookings", listingBookingRouter);
 app.use("/bookings", bookingRouter);
 app.use("/host", hostRouter);
 app.use("/", userRouter);
+
+// Root route -> redirect to /listings
+app.get("/", (req, res) => {
+  res.redirect("/listings");
+});
 // How we can convert schema validation in the form of middlewares.
 
 // We can alse pass this validateListing middleware with routes.

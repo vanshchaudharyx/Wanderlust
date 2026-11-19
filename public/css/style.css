@@ -280,6 +280,12 @@ body {
   .btns {
     gap: 0.5rem;
   }
+
+  /* Theme Toggle Button: align left on mobile to match other nav links */
+  #themeToggleBtn {
+    justify-content: flex-start;
+    width: fit-content;
+  }
 }
 
 @media (max-width: 575.98px) {

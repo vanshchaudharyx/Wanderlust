@@ -6,12 +6,12 @@
     </script>
 
     <div class="row">
-        <div class="col-8 offset-3">
+        <div class="col-12 col-md-8 offset-md-3">
             <h3>
                 <%=listing.title%>
             </h3>
         </div>
-        <div class="card col-6 offset-3 show-card listing-card">
+        <div class="card col-12 col-md-6 offset-md-3 show-card listing-card">
 
             <img src=" <%=listing.image.url%>" class="card-img-top show-img" alt="listing-image">
             <div class="card-body">
@@ -39,16 +39,16 @@
         <br>
         <% if(typeof currUser !== "undefined" && currUser && listing.owner._id.equals(currUser._id)) { %>
             <div class="btns">
-                <a href="/listings/<%=listing._id%>/edit" class="btn btn-dark col-1 offset-3 edit-btn">Edit</a>
+                <a href="/listings/<%=listing._id%>/edit" class="btn btn-dark col-md-1 offset-md-3 edit-btn">Edit</a>
                 <form method="POST" action="/listings/<%=listing._id%>?_method=DELETE">
-                    <button class="btn btn-dark offset-3 delete-btn">Delete</button>
+                    <button class="btn btn-dark offset-md-3 delete-btn">Delete</button>
                 </form>
             </div>
         <% } %>
 
         <!-- ===== BOOKING CARD ===== -->
         <% if (typeof currUser !== "undefined" && currUser && !listing.owner._id.equals(currUser._id)) { %>
-        <div class="col-6 offset-3 mb-4">
+        <div class="col-12 col-md-6 offset-md-3 mb-4">
             <div class="card booking-widget shadow-sm p-3">
                 <h5 class="mb-1">&#x20B9;<%= listing.price.toLocaleString("en-IN") %> <span class="fs-6 fw-normal text-muted">/ night</span></h5>
                 <form action="/listings/<%=listing._id%>/bookings" method="POST" class="needs-validation" novalidate id="bookingForm">
@@ -87,7 +87,7 @@
             </div>
         </div>
         <% } else if (typeof currUser === "undefined" || !currUser) { %>
-        <div class="col-6 offset-3 mb-4">
+        <div class="col-12 col-md-6 offset-md-3 mb-4">
             <div class="card booking-widget shadow-sm p-3 text-center">
                 <h5 class="mb-1">&#x20B9;<%= listing.price.toLocaleString("en-IN") %> <span class="fs-6 fw-normal text-muted">/ night</span></h5>
                 <p class="text-muted mt-2 mb-2 small">Log in to book this listing.</p>
@@ -99,7 +99,7 @@
 
 
 
-                <div class="col-8 offset-3 mb-3">
+                <div class="col-12 col-md-8 offset-md-3 mb-3">
                     <hr>
                     <% if(typeof currUser !== "undefined" && currUser) { %>
                         <h4>Leave A Review</h4>
@@ -144,7 +144,7 @@
                                 <div class="row">
                                     <p><b>All Reviews</b></p>
                                     <% for (let review of listing.reviews) { %>
-                                        <div class="card col-5 ms-3 mb-3">
+                                        <div class="card col-12 col-md-5 ms-0 ms-md-3 mb-3">
                                             <div class="card-body">
                                                 <h5 class="cart-title">@<%=review.author.username%>
                                                 </h5>
@@ -173,7 +173,7 @@
 
 
                 </div>
-                <div class="col-6 offset-3 mb-3">
+                <div class="col-12 col-md-6 offset-md-3 mb-3">
                     <h3>Where you'll be</h3>
                     <div id="map">
 

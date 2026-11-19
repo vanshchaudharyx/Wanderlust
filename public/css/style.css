@@ -261,3 +261,30 @@ body {
 }
 
 
+
+/* ========== RESPONSIVE FIXES ========== */
+
+@media (max-width: 767.98px) {
+  /* Navbar: let collapsed menu expand beyond fixed height */
+  .navbar {
+    height: auto;
+    min-height: 5rem;
+  }
+
+  /* Booking card thumbnail: top corners when image stacks above text */
+  .booking-thumb {
+    border-radius: 0.375rem 0.375rem 0 0;
+  }
+
+  /* Show page Edit/Delete buttons: remove grid offsets on mobile */
+  .btns {
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  /* Category filter bar: tighter spacing on small phones */
+  .filter {
+    margin-right: 1rem;
+  }
+}

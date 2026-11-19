@@ -1,7 +1,7 @@
 <% layout("/layouts/boilerplate") %>
 
     <div class="row">
-        <div class="col-8 offset-2">
+        <div class="col-12 col-md-8 offset-md-2">
             <h3>Edit your listing</h3>
             <br><br>
 
@@ -35,7 +35,7 @@
                 </div>
                 <br><br>
                 <div class="row">
-                    <div class="mb-2 col-4">
+                    <div class="mb-2 col-12 col-sm-4">
                         <label for="price" class="form-label">Price</label>
                         <input name="listing[price]" value="<%=listing.price%>" type="number" class="form-control"
                             required />
@@ -43,14 +43,14 @@
                             Please enter a valid Price.
                         </div>
                     </div>
-                    <div class="mb-2 col-4">
+                    <div class="mb-2 col-12 col-sm-4">
                         <label for="maxGuests" class="form-label">Max Guests</label>
                         <input name="listing[maxGuests]" type="number" value="<%=listing.maxGuests || 4%>" min="1" class="form-control" required />
                         <div class="invalid-feedback">
                             Please enter max guests (min 1).
                         </div>
                     </div>
-                    <div class="mb-2 col-md-4">
+                    <div class="mb-2 col-12 col-sm-4">
                         <label for="country" class="form-label">Country</label>
                         <input name="listing[country]" value="<%=listing.country%>" type="text" class="form-control"
                             required />

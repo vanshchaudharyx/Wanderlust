@@ -105,6 +105,15 @@ app.use("/", userRouter);
 app.get("/", (req, res) => {
   res.redirect("/listings");
 });
+
+// Privacy & Terms Pages
+app.get("/privacy", (req, res) => {
+  res.render("pages/privacy.ejs");
+});
+
+app.get("/terms", (req, res) => {
+  res.render("pages/terms.ejs");
+});
 // How we can convert schema validation in the form of middlewares.
 
 // We can alse pass this validateListing middleware with routes.

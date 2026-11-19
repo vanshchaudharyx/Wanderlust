@@ -14,6 +14,11 @@
             <div class="navbar-nav ms-auto">
                 <a class="nav-link" href="/listings/new">Airbnb your home</a>
 
+                <!-- Dark / Light Theme Toggle -->
+                <button class="btn btn-link nav-link px-2" id="themeToggleBtn" type="button" aria-label="Toggle theme">
+                    <i class="fa-solid fa-moon" id="themeToggleIcon"></i>
+                </button>
+
                 <% if(!currUser) {%>
                     <a class="nav-link " href="/signup"><b>Sign up</b></a>
                     <a class="nav-link" href="/login"><b>Login</b></a>

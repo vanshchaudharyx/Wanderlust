@@ -37,7 +37,7 @@
         </div>
 
         <br>
-        <% if(currUser && listing.owner._id.equals(currUser._id)) { %>
+        <% if(typeof currUser !== "undefined" && currUser && listing.owner._id.equals(currUser._id)) { %>
             <div class="btns">
                 <a href="/listings/<%=listing._id%>/edit" class="btn btn-dark col-1 offset-3 edit-btn">Edit</a>
                 <form method="POST" action="/listings/<%=listing._id%>?_method=DELETE">
@@ -47,7 +47,7 @@
         <% } %>
 
         <!-- ===== BOOKING CARD ===== -->
-        <% if (currUser && !listing.owner._id.equals(currUser._id)) { %>
+        <% if (typeof currUser !== "undefined" && currUser && !listing.owner._id.equals(currUser._id)) { %>
         <div class="col-6 offset-3 mb-4">
             <div class="card booking-widget shadow-sm p-3">
                 <h5 class="mb-1">&#x20B9;<%= listing.price.toLocaleString("en-IN") %> <span class="fs-6 fw-normal text-muted">/ night</span></h5>
@@ -86,7 +86,7 @@
                 <p class="text-center small text-muted mt-2 mb-0">You won't be charged yet</p>
             </div>
         </div>
-        <% } else if (!currUser) { %>
+        <% } else if (typeof currUser === "undefined" || !currUser) { %>
         <div class="col-6 offset-3 mb-4">
             <div class="card booking-widget shadow-sm p-3 text-center">
                 <h5 class="mb-1">&#x20B9;<%= listing.price.toLocaleString("en-IN") %> <span class="fs-6 fw-normal text-muted">/ night</span></h5>
@@ -101,7 +101,7 @@
 
                 <div class="col-8 offset-3 mb-3">
                     <hr>
-                    <% if(currUser) { %>
+                    <% if(typeof currUser !== "undefined" && currUser) { %>
                         <h4>Leave A Review</h4>
                         <form action="/listings/<%=listing.id%>/reviews" method="POST" novalidate
                             class="needs-validation">

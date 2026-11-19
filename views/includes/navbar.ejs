@@ -43,11 +43,11 @@
                     <i class="fa-solid fa-moon" id="themeToggleIcon"></i>
                 </button>
 
-                <% if(!currUser) {%>
+                <% if(typeof currUser === "undefined" || !currUser) {%>
                     <a class="nav-link " href="/signup"><b>Sign up</b></a>
                     <a class="nav-link" href="/login"><b>Login</b></a>
                     <%}%>
-                <% if(currUser) {%>
+                <% if(typeof currUser !== "undefined" && currUser) {%>
                             <a class="nav-link" href="/host/dashboard"><b>Dashboard</b></a>
                             <a class="nav-link" href="/bookings/my-trips"><b>My Trips</b></a>
                             <a class="nav-link" href="/bookings/reservations"><b>Reservations</b></a>

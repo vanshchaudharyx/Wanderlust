@@ -24,7 +24,8 @@ const bookingRouter = require("./routes/booking.js");
 const listingBookingRouter = require("./routes/listingBooking.js");
 const hostRouter = require("./routes/host.js");
 
-const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+// const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+const db_Url = process.env.ATLASDB_URL;
 
 main()
   .then(() => {
@@ -35,7 +36,8 @@ main()
   });
 
 async function main() {
-  await mongoose.connect(MONGO_URL);
+  // await mongoose.connect(MONGO_URL);
+  await mongoose.connect(db_Url);
 }
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));

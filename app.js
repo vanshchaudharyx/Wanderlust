@@ -24,6 +24,8 @@ const User = require("./models/user.js");
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
+const bookingRouter = require("./routes/booking.js");
+const listingBookingRouter = require("./routes/listingBooking.js");
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 
@@ -96,6 +98,8 @@ app.use((req, res, next) => {
 
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
+app.use("/listings/:id/bookings", listingBookingRouter);
+app.use("/bookings", bookingRouter);
 app.use("/", userRouter);
 // How we can convert schema validation in the form of middlewares.
 

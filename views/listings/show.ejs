@@ -44,7 +44,58 @@
                     <button class="btn btn-dark offset-3 delete-btn">Delete</button>
                 </form>
             </div>
-            <%}%>
+        <% } %>
+
+        <!-- ===== BOOKING CARD ===== -->
+        <% if (currUser && !listing.owner._id.equals(currUser._id)) { %>
+        <div class="col-6 offset-3 mb-4">
+            <div class="card booking-widget shadow-sm p-3">
+                <h5 class="mb-1">&#x20B9;<%= listing.price.toLocaleString("en-IN") %> <span class="fs-6 fw-normal text-muted">/ night</span></h5>
+                <form action="/listings/<%=listing._id%>/bookings" method="POST" class="needs-validation" novalidate id="bookingForm">
+                    <div class="row g-2 mt-1">
+                        <div class="col-6">
+                            <label class="form-label small fw-semibold">CHECK-IN</label>
+                            <input type="date" name="booking[checkIn]" id="checkIn" class="form-control" required>
+                            <div class="invalid-feedback">Please select a check-in date.</div>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-semibold">CHECK-OUT</label>
+                            <input type="date" name="booking[checkOut]" id="checkOut" class="form-control" required>
+                            <div class="invalid-feedback">Please select a check-out date.</div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-semibold">GUESTS</label>
+                            <input type="number" name="booking[guests]" id="guests" class="form-control" value="1" min="1" max="20" required>
+                            <div class="invalid-feedback">At least 1 guest required.</div>
+                        </div>
+                    </div>
+                    <!-- Live price breakdown -->
+                    <div id="priceBreakdown" class="mt-3 p-2 bg-light rounded d-none">
+                        <div class="d-flex justify-content-between small">
+                            <span id="nightsLabel">0 nights × &#x20B9;<%= listing.price.toLocaleString("en-IN") %></span>
+                            <span id="totalPrice"></span>
+                        </div>
+                        <hr class="my-1">
+                        <div class="d-flex justify-content-between fw-semibold">
+                            <span>Total</span>
+                            <span id="totalPriceBold"></span>
+                        </div>
+                    </div>
+                    <button class="btn btn-dark w-100 mt-3">Reserve</button>
+                </form>
+                <p class="text-center small text-muted mt-2 mb-0">You won't be charged yet</p>
+            </div>
+        </div>
+        <% } else if (!currUser) { %>
+        <div class="col-6 offset-3 mb-4">
+            <div class="card booking-widget shadow-sm p-3 text-center">
+                <h5 class="mb-1">&#x20B9;<%= listing.price.toLocaleString("en-IN") %> <span class="fs-6 fw-normal text-muted">/ night</span></h5>
+                <p class="text-muted mt-2 mb-2 small">Log in to book this listing.</p>
+                <a href="/login" class="btn btn-dark w-100">Log in</a>
+            </div>
+        </div>
+        <% } %>
+        <!-- ===== END BOOKING CARD ===== -->
 
 
 
@@ -132,3 +183,51 @@
     </div>
 
     <script src="/js/map.js"></script>
+    <script>
+        // Live price calculation for booking widget
+        (function () {
+            const checkInEl  = document.getElementById("checkIn");
+            const checkOutEl = document.getElementById("checkOut");
+            if (!checkInEl || !checkOutEl) return;
+
+            const pricePerNight = <%- listing.price %>;
+            const breakdown     = document.getElementById("priceBreakdown");
+            const nightsLabel   = document.getElementById("nightsLabel");
+            const totalPrice    = document.getElementById("totalPrice");
+            const totalBold     = document.getElementById("totalPriceBold");
+
+            // Set min dates
+            const todayStr = new Date().toISOString().split("T")[0];
+            checkInEl.min  = todayStr;
+            checkOutEl.min = todayStr;
+
+            checkInEl.addEventListener("change", () => {
+                checkOutEl.min = checkInEl.value;
+                if (checkOutEl.value && checkOutEl.value <= checkInEl.value) {
+                    checkOutEl.value = "";
+                }
+                updatePrice();
+            });
+            checkOutEl.addEventListener("change", updatePrice);
+
+            function updatePrice() {
+                if (!checkInEl.value || !checkOutEl.value) {
+                    breakdown.classList.add("d-none");
+                    return;
+                }
+                const msPerDay = 1000 * 60 * 60 * 24;
+                const nights   = Math.round(
+                    (new Date(checkOutEl.value) - new Date(checkInEl.value)) / msPerDay
+                );
+                if (nights <= 0) { breakdown.classList.add("d-none"); return; }
+
+                const total = nights * pricePerNight;
+                const fmt   = (n) => "\u20B9" + n.toLocaleString("en-IN");
+
+                nightsLabel.textContent = nights + " night" + (nights > 1 ? "s" : "") + " \u00D7 " + fmt(pricePerNight);
+                totalPrice.textContent  = fmt(total);
+                totalBold.textContent   = fmt(total);
+                breakdown.classList.remove("d-none");
+            }
+        })();
+    </script>

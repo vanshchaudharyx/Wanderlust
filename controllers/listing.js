@@ -69,22 +69,27 @@ module.exports.renderEditForm = async (req, res) => {
 };
 module.exports.updateListing = async (req, res) => {
   let { id } = req.params;
-  // let listing = await Listing.findById(id);
-  // if (!listing.owner.equals(res.locals.currUser._id)) {
-  //   req.flash("error", "You don't have permission to edit");
-  //   return res.redirect(`/listings/${id}`); //Redirect to show route
-  // }//We will create this as middleware.
-  let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing }); //{...req.body.listing }--> We will convert these parameters into individual values.
+  let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
 
   if (typeof req.file !== "undefined ") {
     let url = req.file.path;
     let filename = req.file.filename;
     listing.image = { url, filename };
-    await listing.save();
   }
 
+  // Re-geocode to update geometry (also backfills listings that have no geometry)
+  if (req.body.listing.location) {
+    let geoResponse = await geocodingClient
+      .forwardGeocode({ query: req.body.listing.location, limit: 1 })
+      .send();
+    if (geoResponse.body.features.length > 0) {
+      listing.geometry = geoResponse.body.features[0].geometry;
+    }
+  }
+
+  await listing.save();
   req.flash("success", "Listing Updated");
-  res.redirect(`/listings/${id}`); //Redirect to show route
+  res.redirect(`/listings/${id}`);
 };
 module.exports.destroyListing = async (req, res) => {
   let { id } = req.params;

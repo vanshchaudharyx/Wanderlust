@@ -106,6 +106,47 @@ body {
 /* MAP */
 #map{
   height: 400px;
-  width: 80vh;
+  width: 100%;
+}
+
+/* BOOKING WIDGET */
+.booking-widget {
+  border-radius: 1rem;
+  border: 1px solid #ddd;
+}
+
+/* BOOKING STATUS BADGES */
+.booking-badge-pending {
+  background-color: #ffc107;
+  color: #212529;
+  padding: 0.3em 0.6em;
+  border-radius: 0.4rem;
+  font-size: 0.8rem;
+}
+.booking-badge-confirmed {
+  background-color: #198754;
+  color: white;
+  padding: 0.3em 0.6em;
+  border-radius: 0.4rem;
+  font-size: 0.8rem;
+}
+.booking-badge-cancelled {
+  background-color: #dc3545;
+  color: white;
+  padding: 0.3em 0.6em;
+  border-radius: 0.4rem;
+  font-size: 0.8rem;
+}
+
+/* MY TRIPS CARD THUMBNAIL */
+.booking-thumb {
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0.375rem 0 0 0.375rem;
+  min-height: 150px;
+}
+.booking-card {
+  border-radius: 0.75rem;
+  overflow: hidden;
 }
 

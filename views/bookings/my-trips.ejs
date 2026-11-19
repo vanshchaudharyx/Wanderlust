@@ -1,0 +1,70 @@
+<% layout('/layouts/boilerplate') -%>
+
+<div class="row mt-4">
+  <div class="col-8 offset-2">
+    <h3><i class="fa-solid fa-suitcase-rolling me-2"></i>My Trips</h3>
+    <hr>
+
+    <% if (bookings.length === 0) { %>
+      <div class="text-center py-5">
+        <i class="fa-solid fa-map-location-dot fa-3x mb-3 text-muted"></i>
+        <p class="text-muted">You haven't booked any trips yet.</p>
+        <a href="/listings" class="btn btn-dark mt-2">Explore Listings</a>
+      </div>
+    <% } else { %>
+
+      <% for (let booking of bookings) { %>
+        <% if (booking.listing) { %>
+          <div class="card mb-4 shadow-sm booking-card">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img
+                  src="<%= booking.listing.image.url %>"
+                  class="img-fluid rounded-start booking-thumb"
+                  alt="listing image"
+                />
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <h5 class="card-title mb-1"><%= booking.listing.title %></h5>
+                    <span class="badge booking-badge-<%= booking.status %>">
+                      <%= booking.status.charAt(0).toUpperCase() + booking.status.slice(1) %>
+                    </span>
+                  </div>
+                  <p class="card-text text-muted small mb-1">
+                    <%= booking.listing.location %>, <%= booking.listing.country %>
+                  </p>
+                  <p class="card-text small">
+                    <i class="fa-regular fa-calendar me-1"></i>
+                    <strong>Check-in:</strong> <%= new Date(booking.checkIn).toLocaleDateString("en-IN", { day:"numeric", month:"short", year:"numeric" }) %>
+                    &nbsp;&nbsp;
+                    <strong>Check-out:</strong> <%= new Date(booking.checkOut).toLocaleDateString("en-IN", { day:"numeric", month:"short", year:"numeric" }) %>
+                  </p>
+                  <p class="card-text small">
+                    <i class="fa-solid fa-users me-1"></i> <%= booking.guests %> guest<%= booking.guests > 1 ? "s" : "" %>
+                    &nbsp;&nbsp;
+                    <i class="fa-solid fa-indian-rupee-sign me-1"></i>
+                    <strong>&#x20B9;<%= booking.totalPrice.toLocaleString("en-IN") %></strong> total
+                  </p>
+
+                  <% if (booking.status !== "cancelled") { %>
+                    <form
+                      action="/bookings/<%= booking._id %>?_method=DELETE"
+                      method="POST"
+                      class="mt-2"
+                      onsubmit="return confirm('Cancel this booking?')"
+                    >
+                      <button class="btn btn-sm btn-outline-danger">Cancel Booking</button>
+                    </form>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% } %>
+      <% } %>
+
+    <% } %>
+  </div>
+</div>

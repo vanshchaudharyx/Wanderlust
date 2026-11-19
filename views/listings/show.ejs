@@ -13,7 +13,7 @@
         </div>
         <div class="card col-12 col-md-6 offset-md-3 show-card listing-card">
 
-            <img src=" <%=listing.image.url%>" class="card-img-top show-img" alt="listing-image">
+            <img src="<%=listing.image.url%>" class="card-img-top show-img" alt="listing-image" loading="lazy">
             <div class="card-body">
                 <p class="card-text"><b>Owned By:</b>
                     <i>
@@ -41,7 +41,7 @@
             <div class="btns">
                 <a href="/listings/<%=listing._id%>/edit" class="btn btn-dark col-md-1 offset-md-3 edit-btn">Edit</a>
                 <form method="POST" action="/listings/<%=listing._id%>?_method=DELETE">
-                    <button class="btn btn-dark offset-md-3 delete-btn">Delete</button>
+                    <button class="btn btn-dark delete-btn">Delete</button>
                 </form>
             </div>
         <% } %>
@@ -53,12 +53,12 @@
                 <h5 class="mb-1">&#x20B9;<%= listing.price.toLocaleString("en-IN") %> <span class="fs-6 fw-normal text-muted">/ night</span></h5>
                 <form action="/listings/<%=listing._id%>/bookings" method="POST" class="needs-validation" novalidate id="bookingForm">
                     <div class="row g-2 mt-1">
-                        <div class="col-6">
+                        <div class="col-12 col-sm-6">
                             <label class="form-label small fw-semibold">CHECK-IN</label>
                             <input type="date" name="booking[checkIn]" id="checkIn" class="form-control" required>
                             <div class="invalid-feedback">Please select a check-in date.</div>
                         </div>
-                        <div class="col-6">
+                        <div class="col-12 col-sm-6">
                             <label class="form-label small fw-semibold">CHECK-OUT</label>
                             <input type="date" name="booking[checkOut]" id="checkOut" class="form-control" required>
                             <div class="invalid-feedback">Please select a check-out date.</div>

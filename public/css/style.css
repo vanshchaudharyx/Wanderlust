@@ -294,3 +294,141 @@ body {
     margin-right: 1rem;
   }
 }
+
+
+/* ========== MOBILE-FIRST RESPONSIVE IMPROVEMENTS ========== */
+
+/* Dynamic Viewport Height (100dvh) */
+html,
+body {
+  min-height: 100dvh;
+}
+
+/* Fluid Typography with clamp() */
+h1, .h1 {
+  font-size: clamp(1.6rem, 3.5vw + 0.8rem, 2.5rem);
+  line-height: 1.25;
+}
+h2, .h2 {
+  font-size: clamp(1.35rem, 2.5vw + 0.6rem, 2rem);
+  line-height: 1.3;
+}
+h3, .h3 {
+  font-size: clamp(1.15rem, 2vw + 0.5rem, 1.75rem);
+  line-height: 1.35;
+}
+h4, .h4 {
+  font-size: clamp(1.05rem, 1.5vw + 0.5rem, 1.4rem);
+}
+h5, .h5 {
+  font-size: clamp(0.95rem, 1.2vw + 0.5rem, 1.25rem);
+}
+
+/* Fluid spacing with clamp() */
+.container {
+  padding-left: clamp(0.75rem, 2vw, 1.5rem);
+  padding-right: clamp(0.75rem, 2vw, 1.5rem);
+}
+
+/* Fluid Listing Grid */
+.listing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  gap: clamp(1rem, 2vw, 1.75rem);
+  margin-top: 1rem;
+}
+.listing-grid::before,
+.listing-grid::after {
+  display: none !important;
+}
+.listing-grid > * {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Aspect-ratio and Object-fit on Listing Images */
+.listing-card .card-img-top {
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 16 / 10;
+  object-fit: cover !important;
+  border-radius: 1rem !important;
+}
+
+.show-img {
+  width: 100%;
+  height: auto !important;
+  aspect-ratio: 16 / 9;
+  object-fit: cover !important;
+  border-radius: 1rem;
+}
+
+/* Accessible Touch Targets (min 44px) & 16px Font Size (Prevents iOS zoom) */
+button,
+.btn,
+.search-btn,
+#themeToggleBtn {
+  min-height: 44px;
+}
+
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea,
+.form-control,
+.form-select,
+.search-input {
+  min-height: 44px;
+  font-size: 16px !important;
+}
+
+.search-input-group {
+  min-height: 44px;
+}
+
+/* Mobile Horizontal Scroll for Category Filters */
+#filters {
+  display: flex;
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+  padding: 0.5rem 0.25rem;
+}
+#filters::-webkit-scrollbar {
+  display: none;
+}
+.filter {
+  flex-shrink: 0;
+  margin-right: 0 !important;
+  margin-top: 1rem !important;
+}
+@media (min-width: 992px) {
+  #filters {
+    flex-wrap: wrap;
+    overflow-x: visible;
+  }
+}
+
+/* Navbar Auto-Height at all screen sizes to prevent 768px tablet clipping */
+.navbar {
+  min-height: 5rem;
+  height: auto !important;
+}
+
+/* 320px Clean Stacking for Booking Card & Dashboard */
+.booking-widget .row {
+  margin-left: 0;
+  margin-right: 0;
+}
+.booking-widget input[type="date"] {
+  min-width: 0;
+  width: 100%;
+}
+.btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}

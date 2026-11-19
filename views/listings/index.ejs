@@ -78,7 +78,7 @@
         </div>
 
         <% if (searchQuery) { %>
-            <div class="d-flex justify-content-between align-items-center mt-3 mb-2">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-3 mb-2">
                 <p class="mb-0 fs-5 text-muted">
                     Results for "<strong class="text-body"><%= searchQuery %></strong>"
                     <% if (activeCategory) { %> in <strong class="text-body"><%= activeCategory %></strong><% } %>
@@ -90,7 +90,7 @@
             </div>
         <% } %>
 
-        <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
+        <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 listing-grid mt-3">
             <% if (allListings.length === 0) { %>
                 <div class="col-12 text-center py-5">
                     <i class="fa-solid fa-magnifying-glass fa-3x mb-3 text-muted"></i>
@@ -107,7 +107,7 @@
             <%for (let listing of allListings){%>
                 <a href="/listings/<%=listing.id%>" class="listing-link">
                     <div class="card col listing-card">
-                        <img src="<%=listing.image.url%>" class="card-img-top" alt="listing_image" style="height:20rem">
+                        <img src="<%=listing.image.url%>" class="card-img-top" alt="listing_image" loading="lazy">
                         <div class="card-img-overlay"></div>
                         <div class="card-body">
                             <p class="card-text">

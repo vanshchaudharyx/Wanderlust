@@ -13,13 +13,15 @@
             </div>
 
             <!-- Search Bar -->
-            <div class="navbar-nav mx-auto my-2 my-md-0">
-                <form class="d-flex" role="search" action="/listings" method="GET">
+            <div class="navbar-nav mx-auto my-2 my-md-0 position-relative" id="searchContainer">
+                <form class="d-flex" role="search" action="/listings" method="GET" id="searchForm">
                     <div class="input-group">
                         <input
                             class="form-control search-input"
                             type="search"
                             name="q"
+                            id="navSearchInput"
+                            autocomplete="off"
                             placeholder="Search destinations, titles..."
                             aria-label="Search"
                             value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
@@ -29,6 +31,8 @@
                         </button>
                     </div>
                 </form>
+                <!-- Autocomplete suggestions dropdown container -->
+                <ul class="dropdown-menu shadow search-suggestions-dropdown" id="searchSuggestions"></ul>
             </div>
 
             <div class="navbar-nav ms-auto">

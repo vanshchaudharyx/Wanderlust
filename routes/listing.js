@@ -26,6 +26,9 @@ router
 
 router.get("/new", isLoggedIn, listingController.renderNewForm);
 
+// Autocomplete suggestions route (placed before /:id)
+router.get("/suggest", wrapAsync(listingController.suggest));
+
 router
   .route("/:id")
   .get(wrapAsync(listingController.showListing))

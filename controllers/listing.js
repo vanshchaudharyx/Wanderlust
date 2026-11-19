@@ -35,6 +35,63 @@ module.exports.renderNewForm = (req, res) => {
   res.render("listings/new.ejs");
 };
 
+// GET /listings/suggest?q=
+module.exports.suggest = async (req, res) => {
+  const { q } = req.query;
+  if (!q || q.trim().length < 2) {
+    return res.json([]);
+  }
+
+  const safeQuery = q.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const regex = new RegExp(safeQuery, "i");
+
+  const matches = await Listing.find(
+    {
+      $or: [
+        { title: { $regex: regex } },
+        { location: { $regex: regex } },
+        { country: { $regex: regex } },
+      ],
+    },
+    "title location country _id"
+  ).limit(20);
+
+  const suggestions = [];
+  const seenPlaces = new Set();
+
+  // First collect unique places (location, country) matching query
+  for (let item of matches) {
+    const placeKey = `${(item.location || "").trim()}, ${(item.country || "").trim()}`.toLowerCase();
+    const matchesPlace =
+      regex.test(item.location || "") || regex.test(item.country || "");
+
+    if (matchesPlace && !seenPlaces.has(placeKey)) {
+      seenPlaces.add(placeKey);
+      suggestions.push({
+        type: "place",
+        location: (item.location || "").trim(),
+        country: (item.country || "").trim(),
+        text: `${(item.location || "").trim()}, ${(item.country || "").trim()}`,
+      });
+      if (suggestions.length >= 8) break;
+    }
+  }
+
+  // Then add listing suggestions if room permits
+  for (let item of matches) {
+    if (suggestions.length >= 8) break;
+    suggestions.push({
+      type: "listing",
+      id: item._id,
+      title: item.title,
+      location: (item.location || "").trim(),
+      country: (item.country || "").trim(),
+    });
+  }
+
+  res.json(suggestions.slice(0, 8));
+};
+
 module.exports.showListing = async (req, res) => {
   let { id } = req.params;
   const listing = await Listing.findById(id)
